@@ -1,4 +1,5 @@
 const Wampy  = require("wampy").Wampy
+const WampyPatch = require("./WampyPatch")
 const websocket = require("ws")
 const Channel = require("./Channel")
 const User = require("./User")
@@ -198,7 +199,7 @@ class Client extends require("events") {
         if (typeof callback == "function") {
             this.on("connected", callback)
         }
-        this._ws._protocols = ["wamp.json"]
+        WampyPatch(this._ws)
         this._ws.connect()
         this._handleQueuedMessages()
         this._ws.subscribe(`co.fun.chat.user.${this._uid}.invites`, this._handleInvites.bind(this))
