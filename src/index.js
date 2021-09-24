@@ -1,3 +1,7 @@
+var Client = require("./Client")
+
 module.exports = {
-    Client: require("./Client")
+    default: Client,
+    Client: Client,
+    CommandInstance: require("./CommandInstance")
 }

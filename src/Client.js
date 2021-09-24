@@ -5,7 +5,7 @@ const Channel = require("./Channel")
 const User = require("./User")
 const {AxiosRequestConfig, create} = require("axios")
 
-class Client extends require("events") {
+class Client extends require("events").EventEmitter {
 
     /**
      * Client for initializing the websocket (non connected state) and general client information
