@@ -18,7 +18,7 @@ class Client extends require("events") {
      */
     constructor(ClientOpts) {
         super()
-        
+
         /**
          * Bearer token for iFunny WebSocket and HTTP Authorization
          * @type {string}
@@ -73,7 +73,7 @@ class Client extends require("events") {
          * @type {Array.<{name: string}>}
          */
 
-        //START HERE    
+        //START HERE
         this._queudMessages = []
         this._priorityMessages = ClientOpts.priorityMessages || []
         this._rateLimited = false
@@ -166,7 +166,7 @@ class Client extends require("events") {
     _log(params) {
         if (this._debug) {
             console.log(params)
-        }    
+        }
     }
 
     _handleChats (data) {
@@ -189,7 +189,7 @@ class Client extends require("events") {
         }
         this.emit("invites", channels)
     }
-    
+
     /**
      * Connects to the iFunny chat WebSocket
      * @param {Function} callback adds a connection callback to the client emitter
@@ -231,7 +231,7 @@ class Client extends require("events") {
             let message = this._queudMessages[0]
             let content = ""
             let contents = {}
-            
+
             if (message) {
 
                 let callbacks = []
@@ -276,7 +276,7 @@ class Client extends require("events") {
                     } else {
                         this._queudMessages.shift()
                         _handlePriorityMessages.bind(this)()
-                        
+
 
                         async function handleCallback(callback) {
                             if (callback) {
@@ -390,6 +390,22 @@ class Client extends require("events") {
         }.bind(this))
     }
 
+    /**
+     * Returns a user object by querying an id
+     * @param {Object} opts
+     * @param {string} opts.id id of user to be queried
+     * @param {function|Object} callback Callback for response
+     * @public
+     */
+    userById(opts={}, callback) {
+        this._request({ url: `/users/${opts.id}` }, function(response) {
+            if (!response.error) {
+                callback(new User(this, response, true))
+            } else if (response.error == "not_found") {
+                callback(response)
+            } else { } //Handle response elsewhere
+        }.bind(this))
+    }
 }
 
 module.exports = Client
