@@ -10,7 +10,7 @@ class Channel {
      */
     constructor(client, data, apiCall=false) {
         Object.assign(this, data)
-        this.apiCall = true
+        this.apiCall = apiCall
         this.client = client
     }
 
