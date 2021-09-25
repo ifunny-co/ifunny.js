@@ -4,10 +4,18 @@
         "include": ["."],                       
         "exclude": ["node_modules", "./src/WampyPatch.js"]             
     },
+    "plugins": ["plugins/markdown"],
+    "menu": [
+        {
+          "title": "GitHub",
+          "link": "https://github.com/ifunny-co/ifunny.js"
+        }
+    ],
     "recurseDepth": 10,                         
     "opts": {
         "destination": "./docs/",               
-        "recurse": true             
+        "recurse": true,
+        "template": "node_modules/clean-jsdoc-theme"             
     },
     "tags": {
         "allowUnknownTags": true

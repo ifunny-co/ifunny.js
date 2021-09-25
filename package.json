@@ -1,6 +1,6 @@
 {
   "name": "ifunny.js",
-  "version": "2.0.6",
+  "version": "1.0.0",
   "description": "iFunny js chatbot library",
   "main": "index.js",
   "scripts": {
@@ -17,9 +17,8 @@
   },
   "homepage": "https://github.com/ifunny-co/ifunny.js#readme",
   "dependencies": {
-    "@types/axios": "^0.14.0",
     "axios": "^0.21.4",
-    "conf": "^7.1.2",
+    "clean-jsdoc-theme": "^3.2.8",
     "events": "^3.2.0",
     "jsdoc": "^3.6.7",
     "wampy": "^6.4.1",
