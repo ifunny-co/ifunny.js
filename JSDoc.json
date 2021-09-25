@@ -2,22 +2,34 @@
     "source": {
         "includePattern": ".+\\.js(doc|x)?$",   
         "include": ["."],                       
-        "exclude": ["node_modules", "./src/WampyPatch.js"]             
+        "exclude": ["node_modules", "./src/WampyPatch.js", "./docs"]             
     },
     "plugins": ["plugins/markdown"],
-    "menu": [
-        {
-          "title": "GitHub",
-          "link": "https://github.com/ifunny-co/ifunny.js"
-        }
-    ],
     "recurseDepth": 10,                         
     "opts": {
         "destination": "./docs/",               
         "recurse": true,
+        "theme_opts": {
+            "menu": [
+                {
+                  "title": "GitHub",
+                  "link": "https://github.com/ifunny-co/ifunny.js",
+                  "target": "_blank",
+                  "class": "some-class",
+                  "id": "some-id"
+                }
+            ],
+            "meta": [
+                {
+                  "name": "authors",
+                  "content": "Tobi and MakeShiftArtist"
+                },
+                {
+                  "name": "description",
+                  "content": "iFunny api wrapper written in node.js"
+                }
+            ]
+        },
         "template": "node_modules/clean-jsdoc-theme"             
-    },
-    "tags": {
-        "allowUnknownTags": true
     }
 }
