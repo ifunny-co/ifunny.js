@@ -1,8 +1,13 @@
-module.exports = class CommandInstance {
+const Client = require("./Client")
+
+class CommandInstance {
     /**
-     * 
-     * @param {require("./Client")} client 
+     * Command class for 
+     * @param {Client} client 
+     * @param {Object} opts
      */
-    constructor(client) {
+    constructor(client, opts) {
     }
 }
+
+module.exports = CommandInstance

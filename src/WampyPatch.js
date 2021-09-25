@@ -2,7 +2,7 @@
  * Wampy patch to work with wamp.json instead of wamp.2.json <3
  */
 
-const _constants = require("../node_modules/wampy/dist/constants.js")
+let _constants = require("../node_modules/wampy/dist/constants.js")
 
 module.exports = function(wampyClient) {
     wampyClient._wsOnOpen = function() {

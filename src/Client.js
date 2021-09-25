@@ -3,7 +3,7 @@ const WampyPatch = require("./WampyPatch")
 const websocket = require("ws")
 const Channel = require("./Channel")
 const User = require("./User")
-const {AxiosRequestConfig, create} = require("axios")
+const {create, AxiosRequestConfig, AxiosInstance} = require("axios")
 
 class Client extends require("events").EventEmitter {
 
@@ -71,20 +71,39 @@ class Client extends require("events").EventEmitter {
 
         /**
          * Queud messages array for message processing
-         * @type {Array.<{name: string}>}
+         * @type {Array.<{name: string, content: string, callback: Object|function, nick: string}>}
+         * @private
          */
-
-        //START HERE
         this._queudMessages = []
-        this._priorityMessages = ClientOpts.priorityMessages || []
-        this._rateLimited = false
-        this._host = ClientOpts.host || "https://api.ifunny.mobi/v4"
 
+        /**
+         * Queud messages array for message processing
+         * @type {Array.<{name: string, content: string, callback: Object|function, nick: string}>}
+         * @private
+         */
+        this._priorityMessages = []
+
+        /**
+         * API Host for iFunnys mobile api
+         * @type {string}
+         * @private
+         */
+        this._host = "https://api.ifunny.mobi/v4"
+
+        /**
+         * Request instance for axios for connection reuse
+         * @type {AxiosInstance}
+         * @private
+         */
         this._axiosInstance = create({ baseURL: this._host })
-
         this._axiosInstance.defaults.headers.Authorization = `Bearer ${this._bearer}`
         this._axiosInstance.defaults.headers["Ifunny-Project-Id"] = "iFunny"
 
+        /**
+         * WebSocket/Wampy instance for connecting to chats, connection not in state.
+         * @type {wampy}
+         * @private
+         */
         this._ws = new Wampy(`wss://${this._wshost}/chat`)
 
         this._ws.options({
@@ -144,8 +163,8 @@ class Client extends require("events").EventEmitter {
 
     /**
      * Makes a request using Basic Authorization token
-     * @param {{AxiosRequestConfig}} opts - Request config
-     * @param {{Ifunny-Project-Id:string, Authorization: string}} opts.headers - Headers for request config
+     * @param {AxiosRequestConfig} opts - Request config
+     * @param {{Authorization: string}} opts.headers - Headers for request config
      * @param {function|Object} callback - Callback for response
      * @private
      */
@@ -155,8 +174,8 @@ class Client extends require("events").EventEmitter {
 
     /**
      * Makes a request using Bearer token
-     * @param {{AxiosRequestConfig}} opts - Request config
-     * @param {{Ifunny-Project-Id:string, Authorization: string}} opts.headers - Headers for request config
+     * @param {AxiosRequestConfig} opts - Request config
+     * @param {{Authorization: string}} opts.headers - Headers for request config
      * @param {function|Object} callback - Callback for response
      * @private
      */
@@ -164,12 +183,22 @@ class Client extends require("events").EventEmitter {
         this._axiosInstance({headers: this._headers(false), ...opts}).then(this._handleResponse(callback)).catch(this._handleResponse(callback))
     }
 
-    _log(params) {
+    /**
+     * Checks debug settings and logs to console
+     * @param {*} params - Logs any arguments
+     * @private
+     */
+    _log() {
         if (this._debug) {
-            console.log(params)
+            console.log(...arguments)
         }
     }
 
+    /**
+     * Creates a new Channel instance for each channel in a new chat message and sends it to the message emitter when the onOpen event happens with wampy
+     * @param {Object} data - Not typing this data, but its channel data for chats and messages, will type it out in Channel.js likely.
+     * @private
+     */
     _handleChats (data) {
         for (let index in data.argsDict.chats) {
             let chat = data.argsDict.chats[index]
@@ -178,6 +207,11 @@ class Client extends require("events").EventEmitter {
         }
     }
 
+    /**
+     * Creates a new Channel instance for each channel in the invite list and sees if it needs to autoAccept messages when the onOpen event happens with wampy
+     * @param {Object} data - Not typing this data, but its channel data for chats and messages, will type it out in Channel.js likely.
+     * @private
+     */
     _handleInvites (data) {
         let channels = []
         for (let index in data.argsDict.chats) {
@@ -192,8 +226,9 @@ class Client extends require("events").EventEmitter {
     }
 
     /**
-     * Connects to the iFunny chat WebSocket
-     * @param {Function} callback adds a connection callback to the client emitter
+     * Connects to the iFunny chat WebSocket, and subscribes to chats and invites
+     * @param {function|Object} callback - adds a connection callback to the client emitter
+     * @public
      */
     connect(callback) {
         if (typeof callback == "function") {
@@ -207,6 +242,11 @@ class Client extends require("events").EventEmitter {
         this._log(this._ws)
     }
 
+    /**
+     * Accepts an invite from a channel
+     * @param {string} channelName - ID of channel to accept, keyword is name in iFunnt chats.
+     * @private
+     */
     _acceptInvite(channelName) {
         this._ws.call("co.fun.chat.invite.accept", [channelName], {
             onSuccess: result => {
@@ -218,6 +258,11 @@ class Client extends require("events").EventEmitter {
         })
     }
 
+    /**
+     * Sorts queud messages and runs them into the WebSocket in order
+     * @param {number} timeout - Number of miliseconds to wait before sending the next messages
+     * @private 
+     */
     async _handleQueuedMessages(timeout=0) {
 
         function _handlePriorityMessages() {
@@ -299,6 +344,14 @@ class Client extends require("events").EventEmitter {
         }.bind(this), timeout)
     }
 
+    /**
+     * Adds message to the queue list to be sent in order
+     * @param {string} channelName - Channel ID (name is key in iFunny chats) for sending message
+     * @param {string} message - Content of message to add to the queue
+     * @param {string} nick - Name of the user to add to the queue
+     * @param {function|Object} [callback=undefined] - Callback of message to add
+     * @private
+     */
     _addToMessageQueue(channelName, message, nick, callback)  {
         this._queudMessages.push({
             name: channelName,
@@ -308,6 +361,14 @@ class Client extends require("events").EventEmitter {
         })
     }
 
+    /**
+     * Adds message to the queue list to be sent in priority (to the front of the queue)
+     * @param {string} channelName - Channel ID (name is key in iFunny chats) for sending message
+     * @param {string} message - Content of message to add to the queue
+     * @param {string} nick - Name of the user to add to the queue
+     * @param {function|Object} [callback=undefined] - Callback of message to add
+     * @private
+     */
     _addToPriorityMessageQueue(channelName, message, nick, callback) {
         this._priorityMessages.push({
             name: channelName,
@@ -317,6 +378,12 @@ class Client extends require("events").EventEmitter {
         })
     }
 
+    /**
+     * Sends message to the WebSocket of iFunny Chats
+     * @param {string} channelName - Channel id (name is key in iFunny chats) for sending message
+     * @param {string} message - Content of message to send
+     * @param {function|Object} [callback=null] - Callback to run after the message is sent. 
+     */
     _sendMessage(channelName, message, callback=null) {
         this._ws.publish(`co.fun.chat.chat.${channelName}`, [200, 1, message], {
             onSuccess: result => {
@@ -330,10 +397,10 @@ class Client extends require("events").EventEmitter {
 
     /**
      * Function for listing contacts for chats
-     * @param {Object} opts Options for listing contacts
-     * @param {string} opts.chat_name Chat name is the variable but based on UI I believe this is actually nickname
-     * @param {number} opts.limit Limit of users to return
-     * @param {function|Object} callback Function for sending user list or error
+     * @param {Object} opts - Options for listing contacts
+     * @param {string} opts.chat_name - Chat name is the variable but based on UI I believe this is actually nickname
+     * @param {number} opts.limit - Limit of users to return
+     * @param {function|Object} callback - Function for sending user list or error
      */
     listContacts(opts={}, callback) {
         let users = []
@@ -350,16 +417,14 @@ class Client extends require("events").EventEmitter {
     }
 
     /**
-     * Function for searching through contacts for chats
-     * @param {Object} opts Options for listing contacts
-     * @param {string} opts.chat_name Chat name is the variable but based on UI I believe this is actually nickname
-     * @param {number} opts.limit Limit of users to return
-     * @param {string} opts.query Query to search through contacts
-     * @param {function|Object} callback Function for sending user list or error
+     * Function for searching through contacts for chats (Not working needs fixed apparently? Probably more options need added)
+     * @param {Object} opts - Options for listing contacts
+     * @param {string} opts.chat_name - Chat name is the variable but based on UI I believe this is actually nickname
+     * @param {number} opts.limit - Limit of users to return
+     * @param {string} opts.query - Query to search through contacts
+     * @param {function|Object} callback - Function for sending user list or error
      * @public
      */
-
-    //fix this
     searchContacts(opts, callback) {
         let users = []
 
@@ -376,9 +441,9 @@ class Client extends require("events").EventEmitter {
 
     /**
      * Returns a user object by querying a nickname
-     * @param {Object} opts
-     * @param {string} opts.nick nickname of user to be queried
-     * @param {function|Object} callback Callback for response
+     * @param {Object} opts - Options object
+     * @param {string} opts.nick - nickname of user to be queried
+     * @param {function|Object} callback - Callback for response
      * @public
      */
     userByNick(opts={}, callback) {
@@ -393,9 +458,9 @@ class Client extends require("events").EventEmitter {
 
     /**
      * Returns a user object by querying an id
-     * @param {Object} opts
-     * @param {string} opts.id id of user to be queried
-     * @param {function|Object} callback Callback for response
+     * @param {Object} opts - Options object
+     * @param {string} opts.id - id of user to be queried
+     * @param {function|Object} callback - Callback for response
      * @public
      */
     userById(opts={}, callback) {

@@ -2,11 +2,14 @@
     "source": {
         "includePattern": ".+\\.js(doc|x)?$",   
         "include": ["."],                       
-        "exclude": ["node_modules"]             
+        "exclude": ["node_modules", "./src/WampyPatch.js"]             
     },
     "recurseDepth": 10,                         
     "opts": {
         "destination": "./docs/",               
         "recurse": true             
+    },
+    "tags": {
+        "allowUnknownTags": true
     }
 }

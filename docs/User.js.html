@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: User.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,41 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: User.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const Client = require("./Client")
 
+class User {
 
-    <h3> </h3>
+    /**
+     * User object for making api calls easier to the client and interacting with Users
+     * @param {Client} client - Client object  
+     * @param {Object} data - Needs typing but fml i dont want to do this right now 
+     * @param {boolean} [apiCall=false] - Whether or not its an api call will decide how it parses the data
+     */
+    constructor(client, data, apiCall=false) {
+        Object.assign(this, data)
+        this.client = client
+    }
 
+    /**
+     * Creates a chat with a user, needs finished.
+     */
+    createChat() {
+        
+    }
+}
 
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+module.exports = User</code></pre>
+        </article>
+    </section>
 
 
 
