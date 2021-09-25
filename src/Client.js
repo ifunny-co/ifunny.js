@@ -451,9 +451,9 @@ class Client extends require("events").EventEmitter {
         this._request({ url: `/users/by_nick/${opts.nick}` }, function(response) {
             if (!response.error) {
                 callback(new User(this, response, true))
-            } else if (response.error == "not_found") {
+            } else {
                 callback(response)
-            } else { } //Handle response elsewhere
+            }
         }.bind(this))
     }
 
@@ -468,9 +468,9 @@ class Client extends require("events").EventEmitter {
         this._request({ url: `/users/${opts.id}` }, function(response) {
             if (!response.error) {
                 callback(new User(this, response, true))
-            } else if (response.error == "not_found") {
+            } else {
                 callback(response)
-            } else { } //Handle response elsewhere
+            }
         }.bind(this))
     }
 }
