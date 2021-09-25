@@ -383,6 +383,7 @@ class Client extends require("events").EventEmitter {
      * @param {string} channelName - Channel id (name is key in iFunny chats) for sending message
      * @param {string} message - Content of message to send
      * @param {function|Object} [callback=null] - Callback to run after the message is sent. 
+     * @private
      */
     _sendMessage(channelName, message, callback=null) {
         this._ws.publish(`co.fun.chat.chat.${channelName}`, [200, 1, message], {

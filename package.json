@@ -4,7 +4,7 @@
   "description": "iFunny js chatbot library",
   "main": "index.js",
   "scripts": {
-    "docs": "jsdoc -c JSDoc.json"
+    "docs": "jsdoc -c JSDoc.json ./README.md"
   },
   "repository": {
     "type": "git",
