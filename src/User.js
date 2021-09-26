@@ -5,7 +5,7 @@ class User {
     /**
      * User object for making api calls easier to the client and interacting with Users
      * @param {Client} client - Client object
-     * @param {Object} data - user data payload
+     * @param {Object} data - User data payload
      * @param {boolean} [apiCall=false] - Whether or not its an api call will decide how it parses the data
      * @param {boolean} data.is_subscribed_to_updates - idk
      * @param {object} data.meme_experience - Days rank
