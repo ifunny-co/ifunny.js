@@ -261,7 +261,7 @@ class Client extends require("events").EventEmitter {
     /**
      * Sorts queud messages and runs them into the WebSocket in order
      * @param {number} timeout - Number of miliseconds to wait before sending the next messages
-     * @private 
+     * @private
      */
     async _handleQueuedMessages(timeout=0) {
 
@@ -382,7 +382,7 @@ class Client extends require("events").EventEmitter {
      * Sends message to the WebSocket of iFunny Chats
      * @param {string} channelName - Channel id (name is key in iFunny chats) for sending message
      * @param {string} message - Content of message to send
-     * @param {function|Object} [callback=null] - Callback to run after the message is sent. 
+     * @param {function|Object} [callback=null] - Callback to run after the message is sent.
      * @private
      */
     _sendMessage(channelName, message, callback=null) {
@@ -395,6 +395,36 @@ class Client extends require("events").EventEmitter {
             onError: callback
         })
     }
+
+    /*
+    _sendMediaMessage(channelName, media, callback=null) {
+      this._messsageCreateEmpty(channelName, result => {
+        let message_id = result.argsDict.message_id
+        if (media)
+      })
+    }
+    */
+
+    /**
+     * Creates an empty message in the iFunny websocket
+     * @param {string} channelName - Channel id (name is key in iFunny chats) for creating message
+     * @param {function|Object} [callback=null] - Callback to run after the empty message is returned
+     * @private
+     */
+    _messsageCreateEmpty(channelName, callback=null) {
+      this._ws.call("co.fun.chat.message.create_empty", [channelName], {
+          onSuccess: result => {
+            if(callback) {
+              callback(result)
+            }
+          },
+          onError: err => {
+              throw err
+          }
+      })
+    }
+
+
 
     /**
      * Function for listing contacts for chats
