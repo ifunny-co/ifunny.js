@@ -5,6 +5,36 @@ const Channel = require("./Channel")
 const User = require("./User")
 const {create, AxiosRequestConfig, AxiosInstance} = require("axios")
 
+/**
+ * @typedef {Object} onConnectInfo
+ * @property {string} authid User id of bot
+ * @property {string} authrole
+ * @property {string} authmethod
+ * @property {string} authprovider 
+ * @property {Object} attributes
+ * @property {string} attributes.nick nickname of bot
+ * @property {Object} roles
+ * @property {Object} roles.broker
+ * @property {Object} roles.broker.features
+ * @property {boolean} roles.broker.features.pattern_based_subscription
+ * @property {boolean} roles.broker.features.publisher_exclusion
+ * @property {boolean} roles.broker.features.publisher_identification
+ * @property {boolean} roles.broker.features.subscriber_blackwhite_listing
+ * @property {boolean} roles.broker.features.session_meta_api
+ * @property {boolean} roles.broker.features.subscription_meta_api
+ * @property {Object} roles.dealer
+ * @property {Object} roles.dealer.features
+ * @property {boolean} roles.dealer.features.call_canceling
+ * @property {boolean} roles.dealer.features.call_timeout
+ * @property {boolean} roles.dealer.features.caller_identification
+ * @property {boolean} roles.dealer.features.pattern_based_recognition
+ * @property {boolean} roles.dealer.features.progressive_call_results
+ * @property {boolean} roles.dealer.features.shared_registration
+ * @property {boolean} roles.dealer.features.session_meta_api
+ * @property {boolean} roles.dealer.features.registration_meta_api
+ * @property {boolean} roles.dealer.features.testament_meta_api
+ */
+
 class Client extends require("events").EventEmitter {
 
     /**
@@ -227,12 +257,12 @@ class Client extends require("events").EventEmitter {
 
     /**
      * Connects to the iFunny chat WebSocket, and subscribes to chats and invites
-     * @param {function|Object} callback - adds a connection callback to the client emitter
+     * @param {function(onConnectInfo): void} [callback=null] - adds a connection callback to the client emitter
      * @public
      */
-    connect(callback) {
-        if (typeof callback == "function") {
-            this.on("connected", callback)
+    connect(callback=null) {
+        if (callback) {
+          this.on("connected", callback)
         }
         WampyPatch(this._ws)
         this._ws.connect()
@@ -253,6 +283,7 @@ class Client extends require("events").EventEmitter {
                 this._log(`Joined channel ${channelName}`)
             },
             onError: err => {
+                this._log(err)
                 throw err
             }
         })

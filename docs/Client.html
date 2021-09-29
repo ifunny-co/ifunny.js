@@ -86,7 +86,7 @@
   <body>
 
     <nav class="navbar" id="navbar">
-      <div class="navbar-heading" id="navbar-heading"><a href="index.html"><h2 class="navbar-heading-text">Home</h2></a></div><div class="search-box" id="search-box"><div class="search-box-input-container"><input class="search-box-input" type="text" placeholder="Search..." id="search-box-input" /><svg class="search-icon" alt="search-icon"><use xlink:href="#search-icon"></use></svg></div><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-main-content" id="sidebar-main-content"><ul><li class="menu-li"><a href='https://github.com/ifunny-co/ifunny.js' class='some-class menu-link' id='some-id' target='_blank'>GitHub</a></li></ul><div class="accordion collapsed" id="8447973" > <h3 class="accordion-heading">Classes<svg><use xlink:href="#down-icon"></use></svg></h3><ul class="accordion-content"><li class="accordion collapsed child" id=6411759><div class="accordion-heading child"><a href="Channel.html">Channel</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="Channel.html#acceptInvite">acceptInvite</a></li><li data-type='method'><a href="Channel.html#members">members</a></li><li data-type='method'><a href="Channel.html#send">send</a></li><li data-type='method'><a href="Channel.html#sendPriority">sendPriority</a></li></ul></li><li class="accordion collapsed child" id=895201><div class="accordion-heading child"><a href="Client.html">Client</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="Client.html#connect">connect</a></li><li data-type='method'><a href="Client.html#listContacts">listContacts</a></li><li data-type='method'><a href="Client.html#searchContacts">searchContacts</a></li><li data-type='method'><a href="Client.html#userById">userById</a></li><li data-type='method'><a href="Client.html#userByNick">userByNick</a></li></ul></li><li class="accordion-list" id=""><a href="CommandInstance.html">CommandInstance</a></li><li class="accordion collapsed child" id=6313791><div class="accordion-heading child"><a href="User.html">User</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="User.html#createChat">createChat</a></li></ul></li></ul> </div></div>
+      <div class="navbar-heading" id="navbar-heading"><a href="index.html"><h2 class="navbar-heading-text">Home</h2></a></div><div class="search-box" id="search-box"><div class="search-box-input-container"><input class="search-box-input" type="text" placeholder="Search..." id="search-box-input" /><svg class="search-icon" alt="search-icon"><use xlink:href="#search-icon"></use></svg></div><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-main-content" id="sidebar-main-content"><ul><li class="menu-li"><a href='https://github.com/ifunny-co/ifunny.js' class='some-class menu-link' id='some-id' target='_blank'>GitHub</a></li></ul><div class="accordion collapsed" id="7731066" > <h3 class="accordion-heading">Classes<svg><use xlink:href="#down-icon"></use></svg></h3><ul class="accordion-content"><li class="accordion collapsed child" id=6892154><div class="accordion-heading child"><a href="Channel.html">Channel</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="Channel.html#acceptInvite">acceptInvite</a></li><li data-type='method'><a href="Channel.html#members">members</a></li><li data-type='method'><a href="Channel.html#send">send</a></li><li data-type='method'><a href="Channel.html#sendPriority">sendPriority</a></li></ul></li><li class="accordion collapsed child" id=8395420><div class="accordion-heading child"><a href="Client.html">Client</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="Client.html#connect">connect</a></li><li data-type='method'><a href="Client.html#listContacts">listContacts</a></li><li data-type='method'><a href="Client.html#searchContacts">searchContacts</a></li><li data-type='method'><a href="Client.html#userById">userById</a></li><li data-type='method'><a href="Client.html#userByNick">userByNick</a></li></ul></li><li class="accordion-list" id=""><a href="CommandInstance.html">CommandInstance</a></li><li class="accordion collapsed child" id=5259731><div class="accordion-heading child"><a href="User.html">User</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="User.html#createChat">createChat</a></li></ul></li></ul> </div><div class="accordion collapsed" id="9219770" > <h3 class="accordion-heading">Global<svg><use xlink:href="#down-icon"></use></svg></h3><ul class="accordion-content"><li class="accordion-list" id=""><a href="global.html#onConnectInfo">onConnectInfo</a></li></ul> </div></div>
       
 
     </nav>
@@ -498,7 +498,7 @@
         <div class="details-item-container">
             <dt class="tag-source">Source:</dt>
             <dd class="tag-source"><ul class="dummy"><li>
-                <a href="Client.js.html">Client.js</a>, <a href="Client.js.html#line20">line 20</a>
+                <a href="Client.js.html">Client.js</a>, <a href="Client.js.html#line50">line 50</a>
             </li></ul></dd>
         </div>
     
@@ -552,7 +552,7 @@
 
     <h4 class="name" id="connect">
         <a href="#connect">#</a>
-        <span class="type-signature"></span>connect<span class="signature">(callback)</span><span class="type-signature"></span>
+        <span class="type-signature"></span>connect<span class="signature">(callback<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
     </h4>
 
     
@@ -585,7 +585,11 @@
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -604,16 +608,29 @@
             
                 
 <span class="param-type">function</span>
-|
-
-<span class="param-type">Object</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
             
 
             <td class="description last"><p>adds a connection callback to the client emitter</p></td>
@@ -661,7 +678,7 @@
         <div class="details-item-container">
             <dt class="tag-source">Source:</dt>
             <dd class="tag-source"><ul class="dummy"><li>
-                <a href="Client.js.html">Client.js</a>, <a href="Client.js.html#line233">line 233</a>
+                <a href="Client.js.html">Client.js</a>, <a href="Client.js.html#line263">line 263</a>
             </li></ul></dd>
         </div>
     
@@ -901,7 +918,7 @@
         <div class="details-item-container">
             <dt class="tag-source">Source:</dt>
             <dd class="tag-source"><ul class="dummy"><li>
-                <a href="Client.js.html">Client.js</a>, <a href="Client.js.html#line406">line 406</a>
+                <a href="Client.js.html">Client.js</a>, <a href="Client.js.html#line611">line 611</a>
             </li></ul></dd>
         </div>
     
@@ -1164,7 +1181,7 @@
         <div class="details-item-container">
             <dt class="tag-source">Source:</dt>
             <dd class="tag-source"><ul class="dummy"><li>
-                <a href="Client.js.html">Client.js</a>, <a href="Client.js.html#line429">line 429</a>
+                <a href="Client.js.html">Client.js</a>, <a href="Client.js.html#line634">line 634</a>
             </li></ul></dd>
         </div>
     
@@ -1381,7 +1398,7 @@
         <div class="details-item-container">
             <dt class="tag-source">Source:</dt>
             <dd class="tag-source"><ul class="dummy"><li>
-                <a href="Client.js.html">Client.js</a>, <a href="Client.js.html#line467">line 467</a>
+                <a href="Client.js.html">Client.js</a>, <a href="Client.js.html#line672">line 672</a>
             </li></ul></dd>
         </div>
     
@@ -1598,7 +1615,7 @@
         <div class="details-item-container">
             <dt class="tag-source">Source:</dt>
             <dd class="tag-source"><ul class="dummy"><li>
-                <a href="Client.js.html">Client.js</a>, <a href="Client.js.html#line450">line 450</a>
+                <a href="Client.js.html">Client.js</a>, <a href="Client.js.html#line655">line 655</a>
             </li></ul></dd>
         </div>
     
@@ -1658,7 +1675,7 @@
       <script src="scripts/search.js"></script>
       <script src="scripts/third-party/fuse.js"></script>
       <script>
-        var list = [{"title":"Channel","link":"<a href=\"Channel.html\">Channel</a>"},{"title":"Channel#acceptInvite","link":"<a href=\"Channel.html#acceptInvite\">Channel &rtrif; acceptInvite</a>"},{"title":"Channel#members","link":"<a href=\"Channel.html#members\">Channel &rtrif; members</a>"},{"title":"Channel#send","link":"<a href=\"Channel.html#send\">Channel &rtrif; send</a>"},{"title":"Channel#sendPriority","link":"<a href=\"Channel.html#sendPriority\">Channel &rtrif; sendPriority</a>"},{"title":"Client","link":"<a href=\"Client.html\">Client</a>"},{"title":"Client#connect","link":"<a href=\"Client.html#connect\">Client &rtrif; connect</a>"},{"title":"Client#listContacts","link":"<a href=\"Client.html#listContacts\">Client &rtrif; listContacts</a>"},{"title":"Client#searchContacts","link":"<a href=\"Client.html#searchContacts\">Client &rtrif; searchContacts</a>"},{"title":"Client#userById","link":"<a href=\"Client.html#userById\">Client &rtrif; userById</a>"},{"title":"Client#userByNick","link":"<a href=\"Client.html#userByNick\">Client &rtrif; userByNick</a>"},{"title":"CommandInstance","link":"<a href=\"CommandInstance.html\">CommandInstance</a>"},{"title":"User","link":"<a href=\"User.html\">User</a>"},{"title":"User#createChat","link":"<a href=\"User.html#createChat\">User &rtrif; createChat</a>"}];
+        var list = [{"title":"Channel","link":"<a href=\"Channel.html\">Channel</a>"},{"title":"Channel#acceptInvite","link":"<a href=\"Channel.html#acceptInvite\">Channel &rtrif; acceptInvite</a>"},{"title":"Channel#members","link":"<a href=\"Channel.html#members\">Channel &rtrif; members</a>"},{"title":"Channel#send","link":"<a href=\"Channel.html#send\">Channel &rtrif; send</a>"},{"title":"Channel#sendPriority","link":"<a href=\"Channel.html#sendPriority\">Channel &rtrif; sendPriority</a>"},{"title":"Client","link":"<a href=\"Client.html\">Client</a>"},{"title":"Client#connect","link":"<a href=\"Client.html#connect\">Client &rtrif; connect</a>"},{"title":"Client#listContacts","link":"<a href=\"Client.html#listContacts\">Client &rtrif; listContacts</a>"},{"title":"Client#searchContacts","link":"<a href=\"Client.html#searchContacts\">Client &rtrif; searchContacts</a>"},{"title":"Client#userById","link":"<a href=\"Client.html#userById\">Client &rtrif; userById</a>"},{"title":"Client#userByNick","link":"<a href=\"Client.html#userByNick\">Client &rtrif; userByNick</a>"},{"title":"CommandInstance","link":"<a href=\"CommandInstance.html\">CommandInstance</a>"},{"title":"User","link":"<a href=\"User.html\">User</a>"},{"title":"User#createChat","link":"<a href=\"User.html#createChat\">User &rtrif; createChat</a>"},{"title":"onConnectInfo","link":"<a href=\"global.html#onConnectInfo\">onConnectInfo</a>"}];
         var options = 
           setupSearch(list, options)
       </script>
