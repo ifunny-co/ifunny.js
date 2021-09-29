@@ -396,11 +396,21 @@ class Client extends require("events").EventEmitter {
         })
     }
 
-    /*
+    /**
+     * Sends message with media to the WebSocket of iFunny Chats
+     * @param {string} channelName - Channel id (name is key in iFunny chats) for sending message
+     * @param {string} message - Content of message to send
+     * @param {function|Object} [callback=null] - Callback to run after the message is sent.
+     * @private
+     */
+     /*
+     // Removed until I finish this
     _sendMediaMessage(channelName, media, callback=null) {
+      if (!channelName) {
+        throw "channelName is required"
+      }
       this._messsageCreateEmpty(channelName, result => {
         let message_id = result.argsDict.message_id
-        if (media)
       })
     }
     */
@@ -413,17 +423,151 @@ class Client extends require("events").EventEmitter {
      */
     _messsageCreateEmpty(channelName, callback=null) {
       this._ws.call("co.fun.chat.message.create_empty", [channelName], {
-          onSuccess: result => {
-            if(callback) {
-              callback(result)
-            }
-          },
-          onError: err => {
-              throw err
+        onSuccess: result => {
+          if (callback) {
+            callback(result)
           }
+        },
+        onError: err => {
+          console.log(err)
+        }
       })
     }
 
+    /**
+     * Checks if a chat url is taken
+     * @param {string} opts.name - Channel id (name is key in iFunny chats) to check for
+     * @param {function|Object} [callback=null] - Callback to run after the status is returned
+     * @private
+     */
+    _checkChatName(opts={}, callback = null) {
+      if (!opts.name) {
+        throw 'opts.name is required to check if the name is available'
+      }
+      this._ws.call('co.fun.chat.check_chat_name', [opts.name], {
+        onSuccess: result => {
+          if (callback) {
+            callback(result.argsDict.available) // boolean
+          }
+        },
+        onError: err => {
+          console.log(err)
+        }
+      })
+    }
+
+    /**
+     * Generates a chat url that isn't taken
+     * @param {function|Object} [callback=null] - Callback to run after the status is returned
+     * @private
+     */
+    _generateChatName(callback=null) {
+        let alphabet = 'abcdefghijklmnopqrstuvwxyz';
+        let digits = [1,2,3,4,5,6,7,8,9,0];
+        let hex_array = [];
+        for (let _ of Array(20)) {
+            hex_array.push(alphabet[Math.floor(Math.random() * alphabet.length)]);
+        };
+        for (let _ of Array(13)) {
+            hex_array.push(digits[Math.floor(Math.random() * digits.length)])
+        }
+        let hex = hex_array.join('')
+
+        this._checkChatName({name: hex}, available => {
+          if (!available) {
+            this._generateChatName()
+          } else {
+            if (callback) {
+              callback(hex)
+            }
+          }
+        })
+    }
+
+    /**
+     * Creates a chat with a user in the iFunny websocket
+     * @param {string} opts.id - Id of the user you want to create a chat with
+     * @param {function|Object} [callback=null] - Callback to run after the chat is created
+     * @private
+     */
+    _createDm(opts = {}, callback=null) {
+      if (!opts.id) {
+        throw 'opts.id is required to create a direct message\nExample:\n{id: user.id}'
+      }
+      this._ws.call(
+        'co.fun.chat.get_or_create_chat',
+        [1, `${this._uid}_${opts.id}`, null, null, null, [opts.id]],
+        {
+          onSuccess: result => {
+            if (callback) {
+              callback(new Channel(this, result.argsDict.chat))
+            }
+          },
+          onError: err => {
+            console.log(err)
+          }
+        }
+      )
+    }
+
+    /**
+     * Creates a chat with a user in the iFunny websocket
+     * @param {string} opts - optional arguments for the chat
+     * @param {string} opts.title - Title of the group chat
+     * @param {string} [opts.name=null] - Chat id for invite links ('https://ifunny.co/c/{opts.name}')
+     * @param {boolean} [opts.force]
+     * @param {number} [opts.type=2] - Type of chat to make {1: 'dm', 2: 'private', 3: 'public'}
+     * @param {string} [opts.coverUrl=null] - Chat cover image url
+     * @param {string} [opts.desc=''] - Description of the chat
+     * @param {Array<string>} [opts.users=[]] - Users to invite to the chat
+     * @param {function|Object} [callback=null] - Callback to run after the chat is created
+     * @private
+     */
+    _createChat(opts = {}, callback=null) {
+      if (!opts.title) {
+        throw 'opts.title is required for chats'
+      }
+      if (!opts.name) {
+        this._generateChatName(name => opts.name = name);
+      }
+
+      this._checkChatName({name: opts.name}, available => {
+        if (!available) {
+          if (opts.force) {
+            this._generateChatName(name => opts.name = name);
+          } else {
+            throw `${opts.name} is taken!`
+          }
+        }
+      })
+      this._ws.call('co.fun.chat.check_chat_name', [opts.name],
+        {
+          onSuccess: result => {
+            if (result) {
+              this._ws.call('co.fun.chat.new_chat', [
+                opts.type || 2,
+                opts.name,
+                opts.title || 'Title',
+                opts.coverUrl || null,
+                opts.desc || '',
+                opts.users || []
+              ], {
+                onSuccess: result => {
+                  if (callback) {
+                    callback(new Channel(this, result.argsDict.chat))
+                  }
+                },
+                onError: err => {
+                  console.log(err)
+                }
+              })
+            }
+          },
+          onError: err => {
+            console.log(err)
+          }
+      })
+    }
 
 
     /**
